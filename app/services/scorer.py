@@ -1,22 +1,22 @@
 import joblib
-import numpy as np
-from sentence_transformers import SentenceTransformer
+from fastembed import TextEmbedding
 from app.services.pdf_parser import PDFParser
 from app.services.feature_builder import FeatureBuilder
 from app.services.nlp_extract import NLPExtractor
 from app.utils.preproc_loader import PreprocLoader
 
+
 class ScoreService:
     def __init__(self):
-        model_path = "models_out_fixed/resume_match_xgb.joblib"
+        model_path = "models_out_fixed/resume_match_xgb_fixed.joblib"
         data = joblib.load(model_path)
+
         self.pdf = PDFParser()
-        embed_name = data["embed_model_name"]
-        self.embedder = SentenceTransformer(embed_name)
+        self.embedder = TextEmbedding(model_name="sentence-transformers/all-MiniLM-L6-v2")
         self.nlp = NLPExtractor()
         self.preproc = PreprocLoader()
-        self.feature_builder = FeatureBuilder(self.embedder, self.preproc)
 
+        self.feature_builder = FeatureBuilder(self.embedder, self.preproc)
 
         self.model = data["model"]
         self.feature_cols = data["feature_cols"]
@@ -24,19 +24,15 @@ class ScoreService:
         self.y_min = data["y_min"]
         self.y_max = data["y_max"]
 
-        
-
         print("Loaded fixed XGB model:", model_path)
 
     def predict(self, X):
-
         norm_score = float(self.model.predict(X)[0])
-
         norm_score = max(0.0, min(1.0, norm_score))
 
         raw_score = norm_score * (self.y_max - self.y_min) + self.y_min
-
         return raw_score
+
     def score_resume(self, resume_bytes, filename, jd_name, jd_text, jd_keywords, jd_skills):
 
         resume_text = self.pdf.parse(resume_bytes)
