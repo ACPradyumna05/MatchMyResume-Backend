@@ -12,10 +12,8 @@ from app.routers.rank import router as rank_router
 
 app = FastAPI(title="Resume Scorer Backend")
 
-# Initialize DB
 init_db()
 
-# CORS configuration
 FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:5173")
 
 app.add_middleware(
@@ -26,7 +24,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Routes
 app.include_router(auth_router.router, prefix="/auth", tags=["auth"])
 app.include_router(predict_router, tags=["predict"])
 app.include_router(rank_router, tags=["rank"])
@@ -38,7 +35,3 @@ def root():
 @app.get("/health")
 def health():
     return {"status": "ok"}
-
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=10000)
