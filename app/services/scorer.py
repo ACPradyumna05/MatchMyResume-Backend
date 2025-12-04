@@ -8,7 +8,7 @@ from app.utils.preproc_loader import PreprocLoader
 
 class ScoreService:
     def __init__(self):
-        model_path = "models_out_fixed/resume_match_xgb_fixed.joblib"
+        model_path = "models_out_fixed/resume_match_xgb.joblib"
         data = joblib.load(model_path)
 
         self.pdf = PDFParser()
