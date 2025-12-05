@@ -15,9 +15,13 @@ app = FastAPI(title="Resume Scorer Backend")
 init_db()
 
 allowed = [
-    os.getenv("FRONTEND_URL", "http://localhost:5173"),
-    "http://localhost:5173",
-    "https://matchmyresume.space",
+
+    os.getenv("FRONTEND_URL"),
+    "https://match-my-resume-frontend.vercel.app",
+    "https://match-my-resume-frontend-1jy1w2ymm-acpradyumna2103s-projects.vercel.app",
+    "http://localhost:5173"
+
+
 ]
 
 app.add_middleware(
