@@ -18,7 +18,7 @@ ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "60")
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-router = APIRouter(prefix="/auth", tags=["auth"])
+router = APIRouter(tags=["auth"])
 
 def create_access_token(data: dict, expires_delta: timedelta | None = None):
     to_encode = data.copy()
