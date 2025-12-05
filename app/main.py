@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI 
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 import os
@@ -14,16 +14,19 @@ app = FastAPI(title="Resume Scorer Backend")
 
 init_db()
 
-FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:5173")
+allowed = [
+    os.getenv("FRONTEND_URL", "http://localhost:5173"),
+    "http://localhost:5173",
+    "https://matchmyresume.space",
+]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[os.getenv("FRONTEND_URL")],
+    allow_origins=allowed,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
 
 app.include_router(auth_router.router, prefix="/auth", tags=["auth"])
 app.include_router(predict_router, tags=["predict"])
@@ -39,4 +42,5 @@ def health():
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host=" 0.0.0.0", port=port)
+    port = int(os.getenv("PORT", 8000))
+    uvicorn.run(app, host="0.0.0.0", port=port)
